@@ -48,7 +48,7 @@ function grabbingLessons(courseId) {
                 return fetchVideoStream(video.ccVid).then((stream) => {
                     const copies = stream?.copies || [];
                     const bestQuality = copies.sort((a, b) => a.quality - b.quality).pop();
-                    return [bestQuality.playurl, audio, res?.data?.name];
+                    return [bestQuality.playurl, audio, res?.data?.name.replace(/\s+/g, '_')];
                 });
             });
         }));
