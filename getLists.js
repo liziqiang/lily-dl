@@ -70,10 +70,8 @@ function generateFilesForCourse(courseId) {
         })
         .then((allList) => {
             const fileMap = {
-                // 音频不需要添加后缀，wget会自动添加
                 audio: allList.map((v) => [v[1], v[2]]),
-                // m3u8下载不会自动添加后缀，默认后缀是ts，改成mp4也是OK的
-                video: allList.map((v) => [v[0], v[2] + '.mp4'])
+                video: allList.map((v) => [v[0], v[2]])
             };
             Object.keys(fileMap).forEach((v) => {
                 const fileName = `list_${v}.txt`;
