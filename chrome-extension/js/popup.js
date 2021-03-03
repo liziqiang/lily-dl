@@ -1,18 +1,23 @@
 $(function () {
     sendMessageToContentScript({ type: 'detect' }, (msg) => {
-        const { list, name } = msg.data || {};
+        const { list, name, token } = msg.data || {};
         // 渲染课程列表
-        $('#course_list').html(`
-    	${list
-            .map(
-                (v) => `
-    		<div class="course"><a href="javascript:;" course-id="${v.id}">【${v.courseTag}】${v.name}</a></div>
-    	`
-            )
-            .join('')}
-    	`);
-        // 更新列表标题
-        name && $('#title').text(`${name}的课程列表`);
+        if (token) {
+            $('#course_list').html(`
+            ${list
+                .map(
+                    (v) => `
+                <div class="course"><a href="javascript:;" course-id="${v.id}">【${v.courseTag}】${v.name}</a></div>
+            `
+                )
+                .join('')}
+            `);
+            // 更新列表标题
+            name && $('#title').text(`${name}的课程列表`);
+        } else {
+            // 更新列表标题
+            $('#title').text('未登录，请先登录');
+        }
     });
 });
 $('#course_list').on('click', '[course-id]', function () {

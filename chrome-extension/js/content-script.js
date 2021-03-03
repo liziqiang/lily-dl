@@ -22,10 +22,15 @@ chrome.runtime.onConnect.addListener(function (port) {
     }
 });
 
+// 获取token
+function getToken() {
+    return window.localStorage.getItem('token');
+}
+
 function Request(url, option) {
     let param = { method: 'GET', mode: 'cors', cache: 'no-cache' };
     option = Object.assign({ isJson: true, useHeaders: true }, option);
-    const token = window.localStorage.getItem('token');
+    const token = getToken();
     if (option.useHeaders && token) {
         param.headers = {
             os: 2,
@@ -56,21 +61,25 @@ function fetchCourseList() {
         3: '已关闭'
     };
     const url = 'https://service.lilyclass.com/api/coursesrecords/navigationall';
-    return Promise.all(
-        Object.keys(courseMap).map((v) => {
+    const token = getToken();
+    let list = [];
+    if (token) {
+        list = Object.keys(courseMap).map((v) => {
             return Request(`${url}?status=${v}`).then((k) => {
                 return (k?.data || []).map((m) => {
                     return { ...m, courseTag: courseMap[v] };
                 });
             });
-        })
-    ).then(([...res]) => {
+        });
+    }
+    return Promise.all(list).then(([...res]) => {
         let list = [];
         res.forEach((v) => {
             list.push(...v);
         });
         return {
             name: window.localStorage.getItem('eName'),
+            token,
             list: list
                 .filter((m) => m.courses)
                 .map((k) => {
