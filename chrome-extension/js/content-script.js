@@ -93,10 +93,13 @@ function fetchCourseList() {
 function fetchLessonList(id) {
     const url = `https://service.lilyclass.com/api/courses/simple/CoursesAndScene/${id}`;
     return Request(url).then((res) => {
-        const lessons = res?.data?.units?.[0]?.lessons || [];
+        const units = res?.data?.units || []
         let list = [];
-        lessons.forEach((v) => {
-            list.push(...v.elements);
+        units.forEach((v) => {
+            const lessons = v.lessons || [];
+            lessons.forEach((v) => {
+                list.push(...v.elements);
+            });
         });
         return list.filter((v) => v.type === 0);
     });
