@@ -1,11 +1,8 @@
 #!/bin/bash
 
 echo "视频下载中..."
-mkdir -p video
-rm -rf video/*
-# ./m3u8_downloader -f=list_video.txt -o=./video
+rm -rf movie/*
 while read c1 c2; do
-    ./m3u8_downloader -u=$c1 -o=./video
-    mv video/main.ts video/"$c2.mp4"
+    ./m3u8_downloader -u=$c1 -o=$c2
 done < list_video.txt
 echo "视频下载完成！"
